@@ -14,7 +14,7 @@ export default function (config) {
       // console.log(store);
       // store.commit('updateLoading', true)
       if (config.url != '/Login') {
-        config.headers['token'] = sessionStorage.getItem('token')
+        config.headers['Authorization'] = sessionStorage.getItem('token')
       }
       return config;
     },

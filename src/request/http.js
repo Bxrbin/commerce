@@ -10,14 +10,14 @@ export function login(user, pass) {
       }
     })
 }
-
-
-
+/* 请求左侧导航栏 */
 export function menus() {
   return instance({
     url: "/menus",
   })
 }
+
+
 export function home() {
   return instance({
     url: "/home",
