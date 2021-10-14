@@ -2,13 +2,13 @@ import instance from './index.js'
 /* 登录 */
 export function login(user, pass) {
   return instance({
-      method: 'post',
-      url: "/login",
-      data: {
-        username: user,
-        password: pass
-      }
-    })
+    method: 'post',
+    url: "/login",
+    data: {
+      username: user,
+      password: pass
+    }
+  })
 }
 /* 请求左侧导航栏 */
 export function menus() {
@@ -17,10 +17,10 @@ export function menus() {
   })
 }
 
-
-export function home() {
+/* 用户数据列表 */
+export function users() {
   return instance({
-    url: "/home",
+    url: "/users",
   })
 }
 export function mov_now() {

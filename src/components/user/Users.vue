@@ -16,21 +16,31 @@
               icon="el-icon-search"
             ></el-button> </el-input
         ></el-col>
-        <e-col :span="4">
+        <el-col :span="4">
           <el-button type="primary">添加用户</el-button>
-        </e-col>
+        </el-col>
       </el-row>
     </el-card>
   </div>
 </template>
 
 <script>
+import { users } from "../../request/http";
 export default {
   props: {},
   data() {
     return {};
   },
   methods: {},
+  async created() {
+    var a = [];
+    a[0] = 0;
+    a[1] = 1;
+    a[4] = 4;
+    console.log(a[3]);
+    let { data: res } = await users();
+    console.log(res);
+  },
   components: {},
 };
 </script>
