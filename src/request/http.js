@@ -18,34 +18,73 @@ export function menus() {
 }
 
 /* 用户数据列表 */
-export function users() {
+export function users(queryInfo) {
   return instance({
     url: "/users",
+    params: queryInfo
   })
 }
-export function mov_now() {
+// 修改用户状态
+export function userState(userInfo) {
   return instance({
-    url: "/movie_now",
+    method: "put",
+    url: `users/${userInfo.id}/state/${userInfo.mg_state}`,
   })
 }
-export function mov_future() {
-  return instance({
-    url: "/movie_future",
-  })
-}
-export function group() {
-  return instance({
-    url: "/group",
-  })
-}
-
-export function reg(user, pass) {
+//添加用户
+export function addUsers(addUsers) {
   return instance({
     method: 'post',
-    url: "/register",
+    url: "users",
+    data: addUsers
+  })
+}
+// 修改用户信息
+export function alterUsers(ialterUsers) {
+  return instance({
+    url: `/users/${ialterUsers.id}`,
+    method: 'put',
     data: {
-      username: user,
-      password: pass
+      emali: ialterUsers.email,
+      mobile: ialterUsers.mobile
     }
+  })
+}
+// 请求用户信息
+export function getUser(id) {
+  return instance({
+    url: `/users/${id}`
+  })
+}
+//删除用户信息
+export function deluser(id) {
+  return instance({
+    method: 'delete',
+    url: `/users/${id}`
+  })
+}
+//获取权限管理中权限列表
+export function getRightsList(type) {
+  return instance({
+    url: `/rights/${type}`
+  })
+}
+//获取权限管理中角色列表
+export function getRolesList() {
+  return instance({
+    url: `/roles`
+  })
+}
+//获取商品分类管理
+export function categories() {
+  return instance({
+    url: `/categories`
+  })
+}
+//删除用户权限
+export function deleterole(role, rightId) {
+  return instance({
+    method: 'delete',
+    url: `roles/${role}/rights/${rightId}`
   })
 }

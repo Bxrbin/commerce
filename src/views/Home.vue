@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container class="all">
     <el-header>
       <p>电商后台管理系统</p>
       <el-button type="info" @click="logOut">退出</el-button>
@@ -78,7 +78,7 @@ export default {
     /* 拿所有的菜单栏数据 */
     async getMenusList() {
       const { data: res } = await menus();
-      console.log(res);
+      // console.log(res);
       if (res.meta.status !== 200) return this.$message.error(res.data.msg);
       this.navigation = res.data;
     },
@@ -111,29 +111,31 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
-
+  // .el-container{
+  //   flex: 1 !important;
+  // }
   .el-aside {
     width: 180px;
     background-color: #333744;
     color: white;
     line-height: 200px;
-    .toggle-button {
-      height: 30px;
-      line-height: 30px;
-      background: #4a5064;
-      font-size: 10px;
-      color: #fff;
-      text-align: center;
-      cursor: pointer;
-    }
     .el-menu {
       border-right: none;
     }
-    .iconfont {
-      margin-right: 10px;
-    }
+  }
+  .toggle-button {
+    height: 30px;
+    line-height: 30px;
+    background: #4a5064;
+    font-size: 10px;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
   }
 
+  .iconfont {
+    margin-right: 10px;
+  }
   .el-main {
     background-color: #e9eef3;
     color: #333;
