@@ -133,35 +133,25 @@
     >
       <!-- 内容主体区 -->
       <el-form
-        :model="alterUsers"
+        :model="alterusers"
         :rules="alterUsersRules"
         ref="alterFormRef"
         label-width="70px"
       >
         <el-form-item label="用户名">
-          <el-input v-model="alterUsers.username" disabled></el-input>
+          <el-input v-model="alterusers.username" disabled></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="alterUsers.email"></el-input>
+          <el-input v-model="alterusers.email"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="mobile">
-          <el-input v-model="alterUsers.mobile"></el-input>
+          <el-input v-model="alterusers.mobile"></el-input>
         </el-form-item>
       </el-form>
       <!-- 底部点击区 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="alterdialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="alterUser">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 删除用户的对话框 -->
-    <el-dialog title="分配角色" :visible.sync="deldialogVisible" width="50%">
-    <!-- 内容主体区 -->
-    <span>qq</span>
-    <!-- 底部点击区 -->
-    <span slot="footer" class="dialog-footer">
-        <el-button @click="deldialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="deluser">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -226,7 +216,7 @@ export default {
       },
       // 修改用户信息
       alterdialogVisible: false,
-      alterUsers: {},
+      alterusers: {},
       alterUsersRules: {
         email: [
           { required: true, message: "请输入邮箱", trigger: "blur" },
@@ -292,30 +282,30 @@ export default {
         this.getUsers();
       });
     },
-    // 修改用户的信息时执行添加用户事件
-    alterDialogclosed() {
-      // 调用resetFields方法重置form表单的内容
-      this.$refs.alterFormRef.resetFields();
-    },
+    /* 修改用户信息 */
     async alterBtn(scope) {
-      console.log(scope);
       const { data: res } = await getUser(scope.row.id);
       if (res.meta.status != 200) return this.$message.error(res.meta.msg);
-      this.alterUsers = res.data;
+      console.log(res);
+      this.alterusers = res.data;
       this.alterdialogVisible = true;
     },
+    /* 修改用户信息对话框关闭的充值表单 */
+    alterDialogclosed() {
+      this.$refs.alterFormRef.resetFields();
+    },
     alterUser() {
+      console.log(this.alterusers);
       this.$refs.alterFormRef.validate(async (valid) => {
         if (!valid) return;
-        const { data: res } = await alterUsers(this.alterUsers);
-        console.log(res);
+        const { data: res } = await alterUsers(this.alterusers);
         if (res.meta.status != 200) return this.$message.error(res.meta.msg);
         this.$message.success(res.meta.msg);
         this.alterdialogVisible = false;
         this.getUsers();
       });
     },
-    // 删除用户
+    /* ------------------删除用户------------------------ */
     delBtn(scope) {
       this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
         confirmButtonText: "确定",

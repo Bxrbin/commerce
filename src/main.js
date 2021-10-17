@@ -14,7 +14,22 @@ import './assets/fonts/iconfont.css'
 Vue.use(VueAxios, axios)
 Vue.use(ElementUI)
 Vue.config.productionTip = false
+// 时间过滤器
+Vue.filter('dateFromat',function(originVal){
+  const dt = new Date(originVal)
 
+  // 年月日
+  const y = dt.getFullYear()
+  const m = (dt.getMonth()+1+'').padStart(2,'0')
+  const d = (dt.getDate()+1+'').padStart(2,'0')
+
+  // 时分秒
+  const hh = (dt.getHours()+1+'').padStart(2,'0')
+  const mm = (dt.getMinutes()+1+'').padStart(2,'0')
+  const ss= (dt.getSeconds()+1+'').padStart(2,'0')
+
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+})
 new Vue({
   router,
   render: h => h(App)
