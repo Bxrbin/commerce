@@ -10,6 +10,9 @@ import VueAxios from 'vue-axios'
 import './assets/css/global.css'
 /* 引用icon图标 */
 import './assets/fonts/iconfont.css'
+/* 引用树状表格 */
+import TreeTable from 'vue-table-with-tree-grid'
+ Vue.component('tree-table',TreeTable)
 
 Vue.use(VueAxios, axios)
 Vue.use(ElementUI)

@@ -138,10 +138,10 @@
         ref="addUserRef"
         label-width="100px"
       >
-        <el-form-item label="用户名" prop="roleName">
+        <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="addUser.roleName"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="roleDesc">
+        <el-form-item label="角色描述" prop="roleDesc">
           <el-input v-model="addUser.roleDesc"></el-input>
         </el-form-item>
       </el-form>

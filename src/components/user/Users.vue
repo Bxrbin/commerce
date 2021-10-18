@@ -74,6 +74,7 @@
                 type="warning"
                 icon="el-icon-setting"
                 size="mini"
+                @click="assignRoles(scope)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -154,6 +155,38 @@
         <el-button type="primary" @click="alterUser">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 分配角色提交 -->
+    <el-dialog
+      title="修改用户"
+      :visible.sync="isassignRoles"
+      width="50%"
+      @close="assignDialogclosed"
+    >
+      <!-- 内容主体区 -->
+      <div>
+        <p>当前的用户：{{ assignUser.username }}</p>
+        <p>当前的角色：{{ assignUser.role_name }}</p>
+        <p>
+          分配新角色：
+          <template>
+            <el-select v-model="oneRole" placeholder="请选择">
+              <el-option
+                v-for="item in rolesList"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select>
+          </template>
+        </p>
+      </div>
+      <!-- 底部点击区 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="isassignRoles = false">取 消</el-button>
+        <el-button type="primary" @click="confirmAssign">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -165,6 +198,8 @@ import {
   alterUsers,
   getUser,
   deluser,
+  getRolesList,
+  assignRole,
 } from "../../request/http";
 const qs = require("qs");
 export default {
@@ -233,6 +268,11 @@ export default {
       },
       //删除用户
       deldialogVisible: false,
+      /* 分配角色 */
+      isassignRoles: false,
+      assignUser: {},
+      rolesList: [],
+      oneRole: "",
     };
   },
   methods: {
@@ -322,7 +362,30 @@ export default {
           this.$message.info("已取消删除");
         });
     },
-    deluser() {},
+    /* ----------------分配角色 ----------------------*/
+    async assignRoles(scope) {
+      this.assignUser = scope.row;
+      const { data: res } = await getRolesList();
+      if (res.meta.status != 200) return this.$message.error(res.meta.msg);
+      this.$message.success(res.meta.msg);
+      this.rolesList = res.data;
+      this.isassignRoles = true;
+    },
+    /* 确认分配角色 */
+    async confirmAssign() {
+      if (!this.oneRole) return this.$message.error("请选择角色");
+      const { data: res } = await assignRole(this.assignUser.id, this.oneRole);
+      console.log(res);
+      if (res.meta.status != 200) return this.$message.error(res.meta.msg);
+      this.$message.success(res.meta.msg);
+      this.isassignRoles = false;
+    },
+    assignDialogclosed() {
+      this.isassignRoles = false;
+      this.assignUser = {};
+      this.rolesList = [];
+      this.oneRole = "";
+    },
   },
   created() {
     this.getUsers();

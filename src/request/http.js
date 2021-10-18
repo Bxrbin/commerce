@@ -61,6 +61,14 @@ export function deluser(id) {
     url: `/users/${id}`,
   });
 }
+//分配用户角色
+export function assignRole(id, rid) {
+  return instance({
+    method: "put",
+    url: `/users/${id}/role `,
+    data: { rid },
+  });
+}
 /* -----------------------权限管理----------------------- */
 //获取权限管理中权限列表
 export function getRightsList(type) {
@@ -135,5 +143,18 @@ export function getOrders(queryInfo) {
   return instance({
     url: `orders`,
     params: queryInfo,
+  });
+}
+/* 获取物流状态 */
+export function getLogistics() {
+  return instance({
+    url: `/kuaidi/1106975712662`,
+  });
+}
+/* -----------获取商品分类----------------------------------------------------------------- */
+export function getCategories(page) {
+  return instance({
+    url: `categories`,
+    params:page
   });
 }
