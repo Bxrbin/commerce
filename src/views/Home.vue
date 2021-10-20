@@ -111,11 +111,8 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
-  // .el-container{
-  //   flex: 1 !important;
-  // }
   .el-aside {
-    width: 180px;
+    width: 200px;
     background-color: #333744;
     color: white;
     line-height: 200px;

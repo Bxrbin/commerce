@@ -7,6 +7,10 @@ body,
   min-width: 1366px;
 }
 
+.el-container>.el-container {
+  height: 0px !important;
+}
+
 .el-breadcrumb {
   margin-bottom: 15px;
   font-size: 12px;
@@ -25,9 +29,17 @@ body,
   margin-top: 15px;
 }
 
-/* .el-dialog{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-} */
+.el-steps {
+  margin: 15px 0px;
+}
+
+.el-step__title {
+  font-size: 13px;
+}
+
+.ql-container {
+  min-height: 300px;
+}
+.el-table__cell{
+padding: 0 20px;
+}

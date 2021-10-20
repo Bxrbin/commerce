@@ -132,13 +132,13 @@ export function editRole(addUser) {
     data: addUser,
   });
 }
-/* ------------------获取可视化数据--------------------- */
+/* -----------获取可视化数据------------------- */
 export function getEcharts(addUser) {
   return instance({
     url: `reports/type/1`,
   });
 }
-/* ------------------获取订单数据--------------------- */
+/* -----------获取订单数据--------------------- */
 export function getOrders(queryInfo) {
   return instance({
     url: `orders`,
@@ -151,10 +151,100 @@ export function getLogistics() {
     url: `/kuaidi/1106975712662`,
   });
 }
-/* -----------获取商品分类----------------------------------------------------------------- */
+/* -----------获取商品分类------------------- */
 export function getCategories(page) {
   return instance({
     url: `categories`,
-    params:page
+    params: page,
+  });
+}
+/* 编辑分类 */
+export function editCateClassify(id, page) {
+  return instance({
+    method: "put",
+    url: `categories/${id}`,
+    data: page,
+  });
+}
+/* 添加分类 */
+export function addCateClassify(page) {
+  return instance({
+    method: "post",
+    url: `categories`,
+    data: page,
+  });
+}
+/* 删除分类 */
+export function delCateClassify(id) {
+  return instance({
+    method: "delete",
+    url: `categories/${id}`
+  });
+}
+/* -----------获取分类参数------------------- */
+export function getAttributes(id, sel) {
+  return instance({
+    url: `categories/${id}/attributes`,
+    params: sel,
+  });
+}
+/* -----------添加动态参数------------------- */
+export function addDynamic(id, sel) {
+  return instance({
+    method: "post",
+    url: `categories/${id}/attributes`,
+    data: sel,
+  });
+}
+/* -----------查询参数------------------- */
+export function queryDynamic(id, attrId, sel) {
+  return instance({
+    url: `categories/${id}/attributes/${attrId}`,
+    params: sel,
+  });
+}
+/* -----------编辑提交参数------------------- */
+export function editPagination(id, attrld, from) {
+  return instance({
+    method: "put",
+    url: `categories/${id}/attributes/${attrld}`,
+    data: from,
+  });
+}
+/* -----------修改参数------------------- */
+export function editDynamic(id, attrId, sel) {
+  return instance({
+    method: "put",
+    url: `categories/${id}/attributes/${attrId}`,
+    data: sel,
+  });
+}
+/* -----------删除参数------------------- */
+export function delDynamic(id, attrId) {
+  return instance({
+    method: "delete",
+    url: `categories/${id}/attributes/${attrId}`,
+  });
+}
+/* -----------获得商品列表------------------- */
+export function getpagination(query) {
+  return instance({
+    url: `goods`,
+    params: query,
+  });
+}
+/* -----------删除商品------------------- */
+export function delpagination(id) {
+  return instance({
+    method: "delete",
+    url: `goods/${id}`,
+  });
+}
+/* -----------添加商品------------------- */
+export function addpagination(from) {
+  return instance({
+    method: "post",
+    url: `goods`,
+    data: from,
   });
 }

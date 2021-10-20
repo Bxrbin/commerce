@@ -8,10 +8,10 @@
     </el-breadcrumb>
     <!-- 卡片区 -->
     <el-card class="box-card">
-      <!-- 添加角色按钮 -->
+      <!-- 添加分类按钮 -->
       <el-row>
         <el-col>
-          <el-button type="primary">添加分类</el-button>
+          <el-button type="primary" @click="addClassify">添加分类</el-button>
         </el-col>
       </el-row>
       <!-------------- 商品分类列表 --------------------->
@@ -53,7 +53,11 @@
             @click="change(scope.row)"
             >编辑</el-button
           >
-          <el-button type="danger" icon="el-icon-delete" size="mini"
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            @click="delBtn(scope.row)"
             >删除</el-button
           >
         </template>
@@ -69,11 +73,73 @@
       >
       </el-pagination>
     </el-card>
+    <!-- 添加商品分类的对话框 -->
+    <el-dialog
+      title="添加分类"
+      :visible.sync="isclassify"
+      width="50%"
+      @close="closeClassify"
+    >
+      <!-- 内容主体区 -->
+      <el-form
+        :model="Classify"
+        ref="RefFormClassify"
+        label-width="80px"
+        :rules="classifyRules"
+      >
+        <el-form-item label="分类名称" prop="cat_name">
+          <el-input v-model="Classify.cat_name"></el-input>
+        </el-form-item>
+        <el-form-item label="父级分类">
+          <el-cascader
+            v-model="oneCheckedClassify"
+            :options="parentCateList"
+            :props="{
+              expandTrigger: 'hover',
+              value: 'cat_id',
+              label: 'cat_name',
+            }"
+            clearable
+            @change="parentCateChanged"
+            change-on-select
+          ></el-cascader>
+        </el-form-item>
+      </el-form>
+      <!-- 底部点击区 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="isclassify = false">取 消</el-button>
+        <el-button type="primary" @click="confirmClassify">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 编辑提交商品分类的对话框 -->
+    <el-dialog
+      title="编辑分类"
+      :visible.sync="isEditclassify"
+      width="50%"
+      @close="closeEditclassify"
+    >
+      <!-- 内容主体区 -->
+      <el-form :model="editName" ref="RefFormClassify" label-width="80px">
+        <el-form-item label="分类名称">
+          <el-input v-model="editName.cat_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 底部点击区 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="isEditclassify = false">取 消</el-button>
+        <el-button type="primary" @click="confirmEditClassify">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getCategories } from "../../request/http";
+import {
+  getCategories,
+  addCateClassify,
+  editCateClassify,
+  delCateClassify,
+} from "../../request/http";
 export default {
   props: {},
   data() {
@@ -92,6 +158,28 @@ export default {
         pagenum: 1,
         pagesize: 5,
       },
+      /* --------------添加分类--------------------------- */
+      isclassify: false,
+      Classify: {
+        cat_pid: 0,
+        cat_name: "",
+        cat_level: 0,
+      },
+      classifyRules: {
+        cat_name: [
+          { required: true, message: "请输入分类名称", trigger: "blur" },
+        ],
+      },
+      //父级分类的列表
+      parentCateList: [],
+      //选中的父级分类的数组
+      oneCheckedClassify: [],
+      /* -------编辑分类-------- */
+      isEditclassify: false,
+      editName: {
+        cat_name: "",
+        cat_id: 0,
+      },
     };
   },
   created() {
@@ -102,7 +190,6 @@ export default {
     async getGoodCategory() {
       const { data: res } = await getCategories(this.page);
       if (res.meta.status != 200) return this.$message.error(res.meta.msg);
-      this.$message.success(res.meta.msg);
       this.goodCategory = res.data.result;
       this.total = res.data.total;
     },
@@ -119,7 +206,87 @@ export default {
       this.getGoodCategory();
     },
     change(row) {
-      console.log(row);
+      this.isEditclassify = true;
+      this.editName = row;
+    },
+    /* -------------------添加商品分类--------------- */
+    async addClassify() {
+      const { data: res } = await getCategories({ type: 2 });
+      if (res.meta.status != 200) return this.$message.error(res.meta.msg);
+      this.$message.success(res.meta.msg);
+      this.parentCateList = res.data;
+      this.isclassify = true;
+    },
+    async confirmClassify() {
+      const { data: res } = await addCateClassify(this.Classify);
+      if (res.meta.status != 201) return this.$message.error(res.meta.msg);
+      this.$message.success(res.meta.msg);
+      this.isclassify = false;
+      this.getGoodCategory();
+    },
+    // 选择项发生变化时触发这个事件
+    parentCateChanged() {
+      console.log(this.oneCheckedClassify);
+      if (this.oneCheckedClassify.length > 0) {
+        // 父级分类的id
+        this.Classify.cat_pid =
+          this.oneCheckedClassify[this.oneCheckedClassify.length - 1];
+        this.Classify.cat_level = this.oneCheckedClassify.length;
+        return;
+      } else {
+        this.Classify.cat_pid = 0;
+        this.Classify.cat_level = 0;
+      }
+    },
+    closeClassify() {
+      console.log("关闭");
+      this.$refs.RefFormClassify.resetFields();
+      this.oneCheckedClassify = [];
+      this.Classify.cat_pid = 0;
+      this.Classify.cat_level = 0;
+    },
+    /* ---------------编辑分类 */
+    //关闭分类对话框时
+    closeEditclassify() {
+      // 初始化对话框
+      this.$refs.RefFormClassify.resetFields();
+    },
+    confirmEditClassify() {
+      // 发送请求数据
+      this.$refs.RefFormClassify.validate(async (valid) => {
+        if (!valid) return;
+        const { data: res } = await editCateClassify(
+          this.editName.cat_id,
+          this.editName
+        );
+        if (res.meta.status != 200) return this.$message.error(res.meta.msg);
+        this.$message.success(res.meta.msg);
+        this.isEditclassify = false;
+        this.getGoodCategory();
+      });
+    },
+    /* ----------------删除分类 */
+    delBtn(row) {
+      this.$confirm("此操作将永久删除该分类, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const { data: res } = await delCateClassify(row.cat_id);
+          if (res.meta.status != 200) return this.$message.error(res.meta.msg);
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
+          this.getGoodCategory();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
   components: {},
@@ -129,5 +296,8 @@ export default {
 <style scoped lang="scss">
 .treeTable {
   margin-top: 15px;
+}
+.el-cascader {
+  width: 100%;
 }
 </style>

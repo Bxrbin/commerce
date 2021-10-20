@@ -17,6 +17,7 @@
             <el-button
               slot="append"
               icon="el-icon-search"
+              @click="findOrders"
             ></el-button> </el-input
         ></el-col>
       </el-row>
@@ -72,7 +73,7 @@
       title="修改地址"
       :visible.sync="changeLocation"
       width="50%"
-      :before-close="CloseChangeLocation"
+      @close="CloseChangeLocation"
     >
       <!-- 内容主体 -->
       <el-form
@@ -84,11 +85,10 @@
         <el-form-item label="省市区/县" prop="pro">
           <el-cascader
             :options="cityOptions"
-            :value="LocationObj.pro"
+            v-model="LocationObj.pro"
             change-on-select
           >
           </el-cascader>
-          <!-- <el-input v-model="LocationObj.pro"></el-input> -->
         </el-form-item>
         <el-form-item label="详细地址" prop="address">
           <el-input v-model="LocationObj.address"></el-input>
@@ -100,12 +100,7 @@
       </span>
     </el-dialog>
     <!-- ------------------查看物流进度的对话框------------------------->
-    <el-dialog
-      title="物流进度"
-      :visible.sync="isLogistics"
-      width="50%"
-      :before-close="CloseFromLogistics"
-    >
+    <el-dialog title="物流进度" :visible.sync="isLogistics" width="50%">
       <!-- 内容主体 -->
       <el-timeline :reverse="true">
         <el-timeline-item
@@ -113,7 +108,7 @@
           :key="index"
           :timestamp="activity.time"
         >
-          {{ activity.context}}
+          {{ activity.context }}
         </el-timeline-item>
       </el-timeline>
     </el-dialog>
@@ -133,7 +128,7 @@ export default {
       /* 修改地址对话框 */
       changeLocation: false,
       LocationObj: {
-        pro: "",
+        pro: [],
         address: "",
       },
       locationRules: {
@@ -145,7 +140,7 @@ export default {
       cityOptions: cityOptions,
       /* 查看物流进度 */
       isLogistics: false,
-      Logistics:[]
+      Logistics: [],
     };
   },
   created() {
@@ -157,9 +152,9 @@ export default {
       const { data: res } = await getOrders(this.queryInfo);
       if (res.meta.status != 200) return this.$message.error(res.meta.msg);
       this.$message.success(res.meta.msg);
-      console.log(res.data.goods);
       this.orderList = res.data.goods;
       this.total = res.data.total;
+      console.log(res.data);
     },
     /* --------------页码改变----------------------------- */
     handNumChange(newNum) {
@@ -189,11 +184,10 @@ export default {
       console.log(scope);
       const { data: res } = await getLogistics();
       console.log(res);
-      this.Logistics=res.data.data
+      this.Logistics = res.data.data;
     },
-    CloseFromLogistics() {
-      this.isLogistics = false;
-      this.$refs.logisticsRef.resetFields();
+    findOrders() {
+      this.$message('没有接口')
     },
   },
   components: {},

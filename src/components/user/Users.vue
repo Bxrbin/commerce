@@ -201,7 +201,6 @@ import {
   getRolesList,
   assignRole,
 } from "../../request/http";
-const qs = require("qs");
 export default {
   props: {},
   data() {
